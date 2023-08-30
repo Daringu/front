@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
-import { AuthResponse } from "../_models/response/AuthResponse";
+import { AuthResponse } from "@/models/response/AuthResponse";
 
 export const API_URL='http://localhost:5000/api'
 

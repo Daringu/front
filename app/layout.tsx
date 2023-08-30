@@ -1,10 +1,11 @@
-'use client'
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/ReactToastify.css'
-import AuthStoreProvider from './_context/AuthStoreContext'
+import AuthStoreProvider from '@/context/AuthStoreContext'
+import TodoStoreProvider from "@/context/TodoStoreContext";
+
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,10 +22,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <AuthStoreProvider>
-        <body className={inter.className}>{children}
-          <ToastContainer /></body>
-      </AuthStoreProvider>
+      <TodoStoreProvider>
+        <AuthStoreProvider>
+          <body className={`${inter.className} bg-blue-300`}>{children}
+            <ToastContainer />
+          </body>
+        </AuthStoreProvider>
+      </TodoStoreProvider>
     </html>
   )
 }

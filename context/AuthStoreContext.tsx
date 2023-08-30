@@ -1,5 +1,6 @@
+'use client'
 import { ReactNode, createContext } from 'react'
-import Store from "../_stores/AuthStore";
+import Store from "@/stores/AuthStore";
 
 interface IAuthStore {
     AuthStore: Store

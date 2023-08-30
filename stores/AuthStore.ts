@@ -1,9 +1,9 @@
 import { makeAutoObservable } from "mobx";
-import { IUser } from "../_models/response/IUser";
-import AuthService from "../_services/AuthService";
+import { IUser } from "@/models/response/IUser";
+import AuthService from "@/services/AuthService";
 import axios from "axios";
-import { AuthResponse } from "../_models/response/AuthResponse";
-import { API_URL } from "../_http";
+import { AuthResponse } from "@/models/response/AuthResponse";
+import { API_URL } from "../http";
 
 export default class Store{
     user={} as IUser;
@@ -48,6 +48,7 @@ export default class Store{
             this.setLoading(false)
         }
     }
+
     async logout(){
         this.setLoading(true)
         try {

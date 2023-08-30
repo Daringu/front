@@ -2,8 +2,8 @@
 import { Button } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import TextField from "@mui/material/TextField";
-import { IFormState } from "@/app/_interfaces";
-import { Variant, inputEvent } from "@/app/_types";
+import { IFormState } from "../../../interfaces";
+import { Variant, inputEvent } from "../../../types";
 import { FormEvent } from 'react'
 
 interface IForm {
