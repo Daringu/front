@@ -1,42 +1,56 @@
 import {useContext, useMemo} from "react";
 import {AuthStoreContext} from "@/context/AuthStoreContext";
-import {TodoStoreContext} from "@/context/TodoStoreContext";
 import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
-import {useRouter} from "next/navigation";
+import { usePathname, useRouter} from "next/navigation";
 interface INavLinks{
     Icon:typeof LogoutIcon;
     text?:string;
     onClick?:()=>void;
     id:string;
+    visible?:boolean;
 }
 
 export const useNavLinks=()=>{
     const {AuthStore}=useContext(AuthStoreContext)
-    const {todoStore}=useContext(TodoStoreContext)
     const router=useRouter();
-
+    const pathName=usePathname();
     const links=useMemo(()=>{
         const navLinks:INavLinks[]=[{
             Icon:AuthStore.isAuth? LogoutIcon:LoginIcon,
             text:AuthStore.isAuth?'Log Out':'Log In',
-            onClick:()=>{
+            onClick:async ()=>{
                 if (AuthStore.isAuth){
-                    AuthStore.logout()
+                    await AuthStore.logout()
+                    router.replace('/')
                 }else{
                     router.replace('/auth')
                 }
             },
-            id:'log'
+            id:'log',
+            visible:true
         },
             {
                 Icon:AuthStore.isAuth? LogoutIcon:LoginIcon,
-                text:'Andrii loh',
-                id:'loh'
+                text:'To todos',
+                id:'totodos',
+                onClick:()=>{
+                    router.replace('/todos')
+                },
+                visible:pathName!=='/todos'&&AuthStore.isAuth
             },
+            {
+                Icon:AuthStore.isAuth? LogoutIcon:LoginIcon,
+                text:'Main page',
+                id:'main',
+                onClick:()=>{
+                    router.replace('/')
+                },
+                visible:pathName!=='/'
+            }
         ]
         return navLinks
-    },[AuthStore.isAuth,AuthStore,router])
+    },[AuthStore.isAuth,AuthStore,pathName])
 
     return links
 }

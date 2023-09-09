@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { AuthResponse } from "@/models/response/AuthResponse";
+import Cookies from 'js-cookie'
 
 export const API_URL='http://localhost:5000/api'
 
@@ -9,7 +10,7 @@ const $api=axios.create({
 })
 
 $api.interceptors.request.use((config)=>{
-    config.headers.Authorization=`Bearer ${localStorage.getItem('token')}`
+    config.headers.Authorization=`Bearer ${Cookies.get('token')}`
     return config;
 })
 

@@ -1,5 +1,5 @@
 'use client'
-import {useState, useContext, useEffect, useCallback} from 'react'
+import { useState, useContext, useEffect, useCallback } from 'react'
 import { Variant, inputEvent } from "../../../types";
 import Image from "next/image";
 import Logo from '@/public/logo.png'
@@ -48,15 +48,15 @@ const Auth = () => {
         })
     }
 
-    const changeVariant =useCallback( () => {
+    const changeVariant = useCallback(() => {
         if (variant === 'LOGIN') {
             setVariant('REGISTRATION')
         } else {
             setVariant('LOGIN')
         }
-    },[variant])
+    }, [variant])
 
-    const onSubmit =useCallback( async (e: FormEvent<HTMLFormElement>) => {
+    const onSubmit = useCallback(async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         try {
             if (variant === 'LOGIN') {
@@ -84,7 +84,7 @@ const Auth = () => {
                 theme: 'light'
             })
         }
-    },[variant,value,router,AuthStore])
+    }, [variant, value, router, AuthStore])
     return (
         <div className="flex flex-col hover:shadow-xl transition-all items-center sm:max-w-sm lg:max-w-lg gap-4 border-2 border-solid border-cyan-300 py-10 px-4 bg-cyan-100 rounded-3xl">
             <Image style={{ maxHeight: '200px', maxWidth: '150px' }} alt="logo" src={Logo.src} width={Logo.width} height={Logo.height} />

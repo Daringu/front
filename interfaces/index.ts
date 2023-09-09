@@ -1,4 +1,5 @@
 import {ITodo, statusType} from "@/models/response/TodoResponse";
+import TodoStore from "@/stores/TodoStore";
 
 export interface IFormState {
     nickname: {
@@ -28,6 +29,7 @@ export interface Board extends IDragHandlers{
     isDraggable:boolean;
     currentBoard:statusType;
     currentItem:ITodo;
+    todoStore:TodoStore;
 }
 
 export interface IBoardItem{

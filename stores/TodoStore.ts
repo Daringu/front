@@ -6,8 +6,12 @@ export default class TodoStore{
     todos=[] as ITodo[];
     isLoading=false;
     isCreateTodoOpen=false;
-    constructor() {
+
+    constructor(isSingleTodoPage:boolean) {
         makeAutoObservable(this)
+        if (isSingleTodoPage) {
+             this.getTodos()
+        }
     }
 
     async addTodo(todo:ITodo){
@@ -59,11 +63,7 @@ export default class TodoStore{
             this.setLoading(false)
         }
     }
-    setCreateTodoOpen(){
-        this.isCreateTodoOpen=!this.isCreateTodoOpen
-    }
     setLoading(bool:boolean){
         this.isLoading=bool;
     }
-
 }

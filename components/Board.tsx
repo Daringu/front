@@ -1,13 +1,13 @@
-import React, { ReactNode, useMemo } from 'react';
+import React, { ReactNode, useMemo, useState } from 'react';
 import { Board } from "@/interfaces";
 import { Box, Typography } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import { ITodo } from "@/models/response/TodoResponse";
-import { useContext } from 'react';
-import { TodoStoreContext } from '@/context/TodoStoreContext';
 import TodoCard from './TodoCard';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+import ModalCreateTodo from './ModalCreateTodo';
+import AddButton from './AddButton';
 
 const cardStyles = {
     'completed': 'border-green-500 bg-green-200 ',
@@ -30,20 +30,28 @@ const backDrop = {
     'cancelled': 'bg-red-400'
 }
 
-const BoardElem: React.FC<Board> = ({ items, type, dragLeaveHandler, dragOverHandler, dragStartHandler, dragEndHandler, isDraggable, currentBoard, currentItem }) => {
-    const { todoStore } = useContext(TodoStoreContext);
+const BoardElem: React.FC<Board> = ({ items, type, dragLeaveHandler, dragOverHandler, dragStartHandler, dragEndHandler, isDraggable, currentBoard, todoStore }) => {
+    const [createTodoOpen, setOpen] = useState(false)
 
     const itemsToRender: ReactNode[] | ReactNode = useMemo(() => {
         const filtered: ITodo[] = items.filter(e => e.status === type)
         return filtered.map(e => {
             return (
-                <TodoCard dragEndHandler={dragEndHandler} key={e.id}
+                <TodoCard todoStore={todoStore} dragEndHandler={dragEndHandler} key={e.id}
                     dragStartHandler={dragStartHandler}
                     draggable={!todoStore.isLoading && isDraggable} item={e} />
             )
 
         })
     }, [items, type, todoStore.isLoading, isDraggable, dragEndHandler, dragStartHandler])
+
+    const handleClose = () => {
+        setOpen(false)
+    }
+
+    const addtodo = () => {
+        setOpen(true)
+    }
 
     return (
         <Box onDragLeave={(e) => { dragLeaveHandler(e) }} onDragEnter={(e) => { dragOverHandler(e, type) }}
@@ -60,6 +68,8 @@ const BoardElem: React.FC<Board> = ({ items, type, dragLeaveHandler, dragOverHan
             >
                 <CircularProgress color='inherit' />
             </Backdrop>
+            <ModalCreateTodo todoStore={todoStore} onClose={handleClose} isOpen={createTodoOpen} status={type} />
+            <AddButton onClick={addtodo} />
         </Box>
     );
 };

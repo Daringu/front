@@ -2,19 +2,23 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { ITodo, statusType } from "@/models/response/TodoResponse";
 import { BoardStoreContext } from '@/context/BoardStoreContext';
 import { observer } from "mobx-react-lite";
-import { TodoStoreContext } from "@/context/TodoStoreContext";
 import BoardElem from "@/components/Board";
 import { Container, } from '@mui/material';
 import Loading from '@/app/(site)/loading';
+import TodoStore from '@/stores/TodoStore';
 
 
 interface BoardsProps {
     types: statusType[];
+    id: string;
+    isSingle: boolean;
 }
 
-const Boards: React.FC<BoardsProps> = ({ types }) => {
-    const { todoStore } = useContext(TodoStoreContext);
+const Boards: React.FC<BoardsProps> = ({ types, id, isSingle }) => {
+    const [todoStore, setTodoStore] = useState<TodoStore>(() => { return new TodoStore(isSingle) })
+
     const { boardStore } = useContext(BoardStoreContext)
+
     const [fetch, setFetch] = useState(false)
 
     const dragEndHandler = useCallback((e: React.DragEvent<HTMLDivElement>) => {
@@ -41,27 +45,13 @@ const Boards: React.FC<BoardsProps> = ({ types }) => {
         e.preventDefault()
     }
 
-    useEffect(() => {
-        const fetchTodos = async () => {
-            setFetch(true);
-            try {
-                await todoStore.getTodos()
-            } catch (error) {
-                console.log(error);
-            } finally {
-                setFetch(false)
-            }
-        }
-        fetchTodos();
-    }, []);
-
-    if (fetch) {
+    if (todoStore.isLoading) {
         return <Loading />
     }
     return (
         <Container className='flex flex-wrap gap-4 items-start justify-between '>
             {types.map(e => {
-                return (<BoardElem currentItem={boardStore.currentItem}
+                return (<BoardElem todoStore={todoStore} currentItem={boardStore.currentItem}
                     currentBoard={boardStore.currentBoard}
                     isDraggable={boardStore.isDraggable}
                     dragEndHandler={dragEndHandler}

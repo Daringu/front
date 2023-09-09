@@ -8,9 +8,9 @@ import { IconButton, Select, MenuItem } from "@mui/material";
 import CheckIcon from '@mui/icons-material/Check';
 import { SelectChangeEvent } from "@mui/material/Select";
 import { IBoardItem } from "@/interfaces";
-import { TodoStoreContext } from "@/context/TodoStoreContext";
 import CloseIcon from '@mui/icons-material/Close';
 import { toast } from "react-toastify";
+import TodoStore from "@/stores/TodoStore";
 
 interface IValues {
     text: string;
@@ -19,6 +19,7 @@ interface IValues {
 
 interface TodoCardProps extends IBoardItem {
     item: ITodo;
+    todoStore: TodoStore;
 }
 const cardStyles = {
     'completed': 'border-green-500 bg-green-200 hover:bg-green-300',
@@ -27,15 +28,12 @@ const cardStyles = {
     'cancelled': 'border-red-500 bg-red-200 hover:bg-red-300'
 }
 
-const TodoCard: React.FC<TodoCardProps> = ({ item, draggable, dragStartHandler, dragEndHandler }) => {
+const TodoCard: React.FC<TodoCardProps> = ({ item, draggable, dragStartHandler, dragEndHandler, todoStore }) => {
     const [isEdit, setIsEdit] = useState(false);
     const [values, setValues] = useState<IValues>({
         status: item.status,
         text: item.text
     } as IValues);
-
-
-    const { todoStore } = useContext(TodoStoreContext);
 
     const onSelectChange = (e: SelectChangeEvent) => {
         setValues((prevState) => {

@@ -4,6 +4,7 @@ import AuthService from "@/services/AuthService";
 import axios from "axios";
 import { AuthResponse } from "@/models/response/AuthResponse";
 import { API_URL } from "../http";
+import Cookies from "js-cookie";
 
 export default class Store{
     user={} as IUser;
@@ -25,7 +26,7 @@ export default class Store{
         this.setLoading(true)
         try {
             const response=await AuthService.login(username,password)
-            localStorage.setItem('token',response.data.accessToken)
+            localStorage.setItem('user',JSON.stringify(response.data.user))
             this.setUser(response.data.user)
             this.setAuth(true)
         } catch (error:any) {
@@ -39,7 +40,7 @@ export default class Store{
         this.setLoading(true)
         try {
             const response=await AuthService.registrate(username,password,email)
-            localStorage.setItem('token',response.data.accessToken)
+            localStorage.setItem('user',JSON.stringify(response.data.user))
             this.setUser(response.data.user)
             this.setAuth(true)
         } catch (error:any) {
@@ -53,7 +54,8 @@ export default class Store{
         this.setLoading(true)
         try {
             const response=await AuthService.logout()
-            localStorage.removeItem('token')
+            Cookies.remove('token')
+            localStorage.removeItem('user')
             this.setUser({} as IUser)
             this.setAuth(false)
         } catch (error:any) {
@@ -71,7 +73,6 @@ export default class Store{
         this.setLoading(true)
         try {
             const response=await axios.get<AuthResponse>(`${API_URL}/refresh`,{withCredentials:true})
-            localStorage.setItem('token',response.data.accessToken)
             this.setAuth(true);
             this.setUser(response.data.user)
         } catch (error) {

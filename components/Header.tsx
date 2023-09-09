@@ -1,7 +1,6 @@
 import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import { useNavLinks } from "@/hooks/navLinks";
-import Image from "next/image";
 import CheckIcon from '@mui/icons-material/Check';
 import { observer } from "mobx-react-lite";
 import { Container } from "@mui/material";
@@ -22,7 +21,7 @@ const Header: React.FC<HeaderProps> = ({ onClick }) => {
                     <Box className="largeMax:hidden flex">
                         {links.map(e => {
                             return (
-                                <IconButton color={'inherit'} sx={{ borderRadius: '0' }} key={e.id} onClick={e.onClick}>
+                                <IconButton color={'inherit'} sx={{ borderRadius: '0', display: `${e.visible ? 'flex' : 'none'}` }} key={e.id} onClick={e.onClick}>
                                     <e.Icon />
                                     {e.text && <Typography variant={"h5"}>{e.text}</Typography>}
                                 </IconButton>
