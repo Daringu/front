@@ -1,4 +1,5 @@
 import {ITodo, statusType} from "@/models/response/TodoResponse";
+import BoardStore from "@/stores/BoardStore";
 import TodoStore from "@/stores/TodoStore";
 
 export interface IFormState {
@@ -30,6 +31,7 @@ export interface Board extends IDragHandlers{
     currentBoard:statusType;
     currentItem:ITodo;
     todoStore:TodoStore;
+    boardStore:BoardStore;
 }
 
 export interface IBoardItem{

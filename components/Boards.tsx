@@ -1,12 +1,14 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { ITodo, statusType } from "@/models/response/TodoResponse";
-import { BoardStoreContext } from '@/context/BoardStoreContext';
 import { observer } from "mobx-react-lite";
 import BoardElem from "@/components/Board";
 import { Container, } from '@mui/material';
-import Loading from '@/app/(site)/loading';
 import TodoStore from '@/stores/TodoStore';
-
+import BoardStore from '@/stores/BoardStore';
+import { io } from 'socket.io-client';
+import { URL } from '@/http';
+import { AuthStoreContext } from '@/context/AuthStoreContext';
+import { toast } from 'react-toastify';
 
 interface BoardsProps {
     types: statusType[];
@@ -16,18 +18,34 @@ interface BoardsProps {
 
 const Boards: React.FC<BoardsProps> = ({ types, id, isSingle }) => {
     const [todoStore, setTodoStore] = useState<TodoStore>(() => { return new TodoStore(isSingle) })
-
-    const { boardStore } = useContext(BoardStoreContext)
-
+    const [boardStore, setBoardStore] = useState<BoardStore>(() => { return new BoardStore() })
     const [fetch, setFetch] = useState(false)
-
-    const dragEndHandler = useCallback((e: React.DragEvent<HTMLDivElement>) => {
+    const { AuthStore } = useContext(AuthStoreContext)
+    useEffect(() => {
+        const socket = io(URL, { transports: ['websocket'] });
+        socket.on('connect', () => {
+            console.log('connected')
+        })
+        socket.on('disconnect', () => {
+            console.log('disconnected')
+        })
+        socket.on('message', (msg) => {
+            toast(msg)
+        })
+        setTimeout(() => {
+            socket.emit('message', `ti loh from ${AuthStore.user.username}`)
+        }, 10000)
+        return () => {
+            socket.disconnect()
+        }
+    }, [])
+    const dragEndHandler = useCallback(async (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault()
         if (boardStore.currentBoard !== boardStore.initBoard) {
-            todoStore.updateTodo({ ...boardStore.currentItem, status: boardStore.currentBoard })
+            await todoStore.updateTodo({ ...boardStore.currentItem, status: boardStore.currentBoard })
         }
         boardStore.setIsDraggable(true)
-        boardStore.setCurrentBoard('' as statusType)
+        boardStore.discard()
     }, [todoStore, boardStore])
 
     const dragStartHandler = useCallback((e: React.DragEvent<HTMLDivElement>, item: ITodo, type: statusType) => {
@@ -45,13 +63,11 @@ const Boards: React.FC<BoardsProps> = ({ types, id, isSingle }) => {
         e.preventDefault()
     }
 
-    if (todoStore.isLoading) {
-        return <Loading />
-    }
     return (
         <Container className='flex flex-wrap gap-4 items-start justify-between '>
             {types.map(e => {
                 return (<BoardElem todoStore={todoStore} currentItem={boardStore.currentItem}
+                    boardStore={boardStore}
                     currentBoard={boardStore.currentBoard}
                     isDraggable={boardStore.isDraggable}
                     dragEndHandler={dragEndHandler}

@@ -1,8 +1,9 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { AuthResponse } from "@/models/response/AuthResponse";
 import Cookies from 'js-cookie'
+export const URL='http://localhost:5000'
 
-export const API_URL='http://localhost:5000/api'
+export const API_URL=URL+'/api'
 
 const $api=axios.create({
     withCredentials:true,

@@ -19,7 +19,6 @@ export default class TodoStore{
         try {
             const todoResponse=await TodoService.addTodo(todo);
             this.todos=[...this.todos,todoResponse]
-            
         }catch (e){
             console.log(e)
         }finally {

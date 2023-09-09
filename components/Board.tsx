@@ -30,7 +30,7 @@ const backDrop = {
     'cancelled': 'bg-red-400'
 }
 
-const BoardElem: React.FC<Board> = ({ items, type, dragLeaveHandler, dragOverHandler, dragStartHandler, dragEndHandler, isDraggable, currentBoard, todoStore }) => {
+const BoardElem: React.FC<Board> = ({ boardStore, items, type, dragLeaveHandler, dragOverHandler, dragStartHandler, dragEndHandler, isDraggable, currentBoard, todoStore }) => {
     const [createTodoOpen, setOpen] = useState(false)
 
     const itemsToRender: ReactNode[] | ReactNode = useMemo(() => {
@@ -63,7 +63,7 @@ const BoardElem: React.FC<Board> = ({ items, type, dragLeaveHandler, dragOverHan
             {itemsToRender}
             <Backdrop
                 sx={{ position: 'absolute', color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={todoStore.isLoading}
+                open={todoStore.isLoading && type === boardStore.currentBoard || todoStore.isLoading && type === boardStore.initBoard}
                 className={`${backDrop[type]}}`}
             >
                 <CircularProgress color='inherit' />

@@ -75,6 +75,7 @@ export default class Store{
             const response=await axios.get<AuthResponse>(`${API_URL}/refresh`,{withCredentials:true})
             this.setAuth(true);
             this.setUser(response.data.user)
+            
         } catch (error) {
             return Promise.reject(error)
         }finally{

@@ -6,8 +6,6 @@ import type { NextRequest } from 'next/server'
 export async function middleware(request: NextRequest) {
     try {        
         const response=await fetch('http://localhost:5000/api/authorize',{method:'GET',credentials:'include',headers:{'Authorization':`Bearer ${request.cookies.get('token')?.value}`,"Content-Type": "application/json",}})
-       console.log(response);
-       
         
         if (response.status===401) {
             throw new Error('Not authorized')

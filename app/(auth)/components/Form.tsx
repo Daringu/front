@@ -19,6 +19,7 @@ const Form: React.FC<IForm> = ({ onSubmit, value, isLoading, onChange, changeVar
     return (
         <form onSubmit={onSubmit} className="flex lg:flex-row transition-all flex-wrap  flex-col gap-4" >
             <TextField placeholder="Your nickname"
+                type="text"
                 error={!value.nickname.isValid}
                 label='Nickname'
                 id="nickname"
@@ -32,6 +33,7 @@ const Form: React.FC<IForm> = ({ onSubmit, value, isLoading, onChange, changeVar
             />
             {variant === 'REGISTRATION' && <TextField placeholder="Your email"
                 error={!value.email.isValid}
+                type="email"
                 label='Email'
                 id="email "
                 name="email"

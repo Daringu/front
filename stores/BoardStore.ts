@@ -27,6 +27,12 @@ class BoardStore{
     setIsDraggable = (isDraggable:boolean) =>{
         this.isDraggable = isDraggable;
     };
+    discard(){
+        this.initBoard = '' as statusType;
+        this.currentBoard = '' as statusType;
+        this.currentItem = {} as ITodo;
+        this.isDraggable = true;
+    }
 }
 
 export default BoardStore;
