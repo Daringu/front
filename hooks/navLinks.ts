@@ -52,7 +52,7 @@ export const useNavLinks=()=>{
                     router.replace('/todos')
                 },
                 visible:pathName!=='/todos'&&AuthStore.isAuth,
-                disabled:!AuthStore.isLoading
+                disabled:AuthStore.isLoading
             },
             {
                 Icon:AuthStore.isAuth? LogoutIcon:LoginIcon,
@@ -62,7 +62,7 @@ export const useNavLinks=()=>{
                     router.replace('/')
                 },
                 visible:pathName!=='/',
-                disabled:!AuthStore.isLoading
+                disabled:AuthStore.isLoading
             },
             {
                 Icon:MarkunreadIcon,
