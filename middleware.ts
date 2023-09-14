@@ -5,7 +5,7 @@ import type { NextRequest } from 'next/server'
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
     try {        
-        const response=await fetch('https://todosapp-3bnd.onrender.com/api/authorize',{method:'POST',credentials:'include',headers:{'Authorization':`Bearer ${request.cookies.get('token')?.value}`,"Content-Type": "application/json", "Accept": "application/json", "Access-Control-Allow-Origin": "https://todosapp-3bnd.onrender.com", 'withCredentials':'true'}})
+        const response=await fetch('https://front-three-azure.vercel.app/api/authorize',{method:'POST',credentials:'include',headers:{"Content-Type": "application/json",'Cookie':request.cookies.toString()}})
         
         if (response.status===401) {
             throw new Error('Not authorized')

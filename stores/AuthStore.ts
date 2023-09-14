@@ -4,7 +4,7 @@ import { IUser } from "@/models/response/IUser";
 import AuthService from "@/services/AuthService";
 import axios from "axios";
 import { AuthResponse } from "@/models/response/AuthResponse";
-import { API_URL } from "../http";
+import $api, { API_URL } from "../http";
 import Cookies from "js-cookie";
 import { Message } from "@/interfaces";
 import { TeamTodoService } from "@/services/TodoService";
@@ -89,7 +89,7 @@ export default class Store{
     async checkAuth(){
         this.setLoading(true)
         try {
-            const response=await axios.post<AuthResponse>(`${API_URL}/refresh`,{withCredentials:true})
+            const response=await $api.post<AuthResponse>(`/refresh`,{withCredentials:true})
             this.setAuth(true);
             this.setUser(response.data.user)
             if (this.hasConnected) {
