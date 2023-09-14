@@ -15,7 +15,6 @@ const MessageComp = ({ item }: MessageCompProps) => {
         try {
 
             const res = await MessageService.acceptInvitation({ teamId: item.messageAttachment, messageId: item.id });
-            console.log(res);
             if (res.status !== 404) {
                 AuthStore.user.teams.push(res.team!);
             }

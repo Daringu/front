@@ -3,11 +3,10 @@
 import Boards from "@/components/Boards";
 import { availableStatuses } from "@/models/response/TodoResponse";
 import { useParams, useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import TodoStore from "@/stores/TodoStore";
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { observer } from "mobx-react-lite";
-import { AuthStoreContext } from "@/context/AuthStoreContext";
 import { toast } from "react-toastify";
 
 
@@ -16,7 +15,6 @@ const TeamTodosPage = () => {
     const [value, setValue] = useState('' as string)
     const params = useParams()
     const router = useRouter()
-    const { AuthStore } = useContext(AuthStoreContext)
     const [todoStore, setTodoStore] = useState<TodoStore>(() => { return new TodoStore('team', params.id as string) })
 
     useEffect(() => {
