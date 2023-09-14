@@ -17,7 +17,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
         setOpen((prevState) => !prevState)
     }
     useEffect(() => {
-        if (Cookies.get('token')) {
+        if (typeof window !== 'undefined' && localStorage.getItem('user')) {
             AuthStore.checkAuth();
             return;
         }
