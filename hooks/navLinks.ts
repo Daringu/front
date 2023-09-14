@@ -17,6 +17,7 @@ interface INavLinks{
     id:string;
     visible?:boolean;
     quantity?:number;
+    disabled:boolean;
 }
 
 export const useNavLinks=()=>{
@@ -40,7 +41,8 @@ export const useNavLinks=()=>{
                 }
             },
             id:'log',
-            visible:true
+            visible:true,
+            disabled:false
         },
             {
                 Icon:AuthStore.isAuth? LogoutIcon:LoginIcon,
@@ -49,7 +51,8 @@ export const useNavLinks=()=>{
                 onClick:()=>{
                     router.replace('/todos')
                 },
-                visible:pathName!=='/todos'&&AuthStore.isAuth
+                visible:pathName!=='/todos'&&AuthStore.isAuth,
+                disabled:!AuthStore.isLoading
             },
             {
                 Icon:AuthStore.isAuth? LogoutIcon:LoginIcon,
@@ -58,7 +61,8 @@ export const useNavLinks=()=>{
                 onClick:()=>{
                     router.replace('/')
                 },
-                visible:pathName!=='/'
+                visible:pathName!=='/',
+                disabled:!AuthStore.isLoading
             },
             {
                 Icon:MarkunreadIcon,
@@ -68,7 +72,8 @@ export const useNavLinks=()=>{
                     toggleOpen()
                 },
                 quantity:AuthStore.user?.messages?.filter(e=>!e.seen).length,
-                visible:AuthStore.isAuth
+                visible:AuthStore.isAuth,
+                disabled:false
             },
             {
                 Icon:AddIcon,
@@ -77,7 +82,8 @@ export const useNavLinks=()=>{
                 onClick:()=>{
                     toggleOpenTeam()
                 },
-                visible:AuthStore.isAuth
+                visible:AuthStore.isAuth,
+                disabled:false
             },
             {
                 Icon:Groups2Icon,
@@ -86,11 +92,12 @@ export const useNavLinks=()=>{
                 onClick:()=>{
                     toggleTeamsOpen()
                 },
-                visible:AuthStore.isAuth
+                visible:AuthStore.isAuth,
+                disabled:false
             }
         ]
         return navLinks
-    },[AuthStore.isAuth,AuthStore.user.messages,pathName,toggleOpen,toggleOpenTeam,toggleTeamsOpen,AuthStore.user])
+    },[AuthStore.isAuth,AuthStore.user.messages,pathName,toggleOpen,toggleOpenTeam,toggleTeamsOpen,AuthStore.user,AuthStore.isLoading])
 
     return links
 }

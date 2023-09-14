@@ -25,7 +25,7 @@ const Header: React.FC<HeaderProps> = ({ onClick }) => {
                     <Box className="largeMax:hidden gap-1 flex">
                         {links.map(e => {
                             return (
-                                <IconButton className="border-solid  border-2 rounded-sm border-sky-600" color={'inherit'} sx={{ borderRadius: '0', display: `${e.visible ? 'flex' : 'none'}` }} key={e.id} onClick={e.onClick}>
+                                <IconButton disabled={e.disabled} className="border-solid  border-2 rounded-sm border-sky-600" color={'inherit'} sx={{ borderRadius: '0', display: `${e.visible ? 'flex' : 'none'}` }} key={e.id} onClick={e.onClick}>
                                     <e.Icon />
                                     {e.text && <Typography variant={"h5"}>{e.text}</Typography>}
                                     {e.id === 'mail' && <Typography className=" text-red-700">{(e.quantity!) > 0 && e.quantity}</Typography>}
