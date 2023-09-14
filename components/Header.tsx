@@ -6,19 +6,26 @@ import { observer } from "mobx-react-lite";
 import { Container } from "@mui/material";
 import { AuthStoreContext } from "@/context/AuthStoreContext";
 import { useContext } from "react";
+import { useRouter } from "next/navigation";
 
 
 interface HeaderProps {
     onClick: () => void;
 }
 const Header: React.FC<HeaderProps> = ({ onClick }) => {
+    const router = useRouter()
     const { AuthStore } = useContext(AuthStoreContext);
     const links = useNavLinks();
     return (
         <AppBar position={'static'}>
             <Container>
                 <Toolbar sx={{ justifyContent: 'space-between' }}>
-                    <IconButton color={'inherit'} sx={{ flexGrow: 0, display: 'flex', alignItems: 'flex-center', gap: '0.5rem', borderRadius: '0' }}>
+                    <IconButton onClick={() => {
+                        if (AuthStore.isLoading) {
+                            return;
+                        }
+                        router.push('/')
+                    }} color={'inherit'} sx={{ flexGrow: 0, display: 'flex', alignItems: 'flex-center', gap: '0.5rem', borderRadius: '0' }}>
                         TODO
                         <CheckIcon sx={{ scale: '1.5' }} />
                     </IconButton>
