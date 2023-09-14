@@ -1,5 +1,5 @@
 import { AuthStoreContext } from "@/context/AuthStoreContext";
-import { DialogueContext } from "@/context/DialogueContext";
+import { TeamsContext } from "@/context/TeamsModalContext";
 import { Message } from "@/interfaces";
 import { MessageService } from "@/services/MessageService";
 import { Box, Button, DialogContent, Typography } from "@mui/material";
@@ -13,7 +13,7 @@ interface MessageCompProps {
 }
 const MessageComp = ({ item }: MessageCompProps) => {
     const { AuthStore } = useContext(AuthStoreContext)
-    const { toggleOpen } = useContext(DialogueContext)
+    const { toggleOpen } = useContext(TeamsContext)
     const handleAccept = async () => {
         try {
 
