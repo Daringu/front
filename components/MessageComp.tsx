@@ -1,16 +1,19 @@
 import { AuthStoreContext } from "@/context/AuthStoreContext";
+import { DialogueContext } from "@/context/DialogueContext";
 import { Message } from "@/interfaces";
 import { MessageService } from "@/services/MessageService";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, DialogContent, Typography } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import { useContext } from "react";
 import { toast } from "react-toastify";
+
 
 interface MessageCompProps {
     item: Message;
 }
 const MessageComp = ({ item }: MessageCompProps) => {
     const { AuthStore } = useContext(AuthStoreContext)
+    const { toggleOpen } = useContext(DialogueContext)
     const handleAccept = async () => {
         try {
 
@@ -19,6 +22,7 @@ const MessageComp = ({ item }: MessageCompProps) => {
                 AuthStore.user.teams.push(res.team!);
             }
             AuthStore.user.messages = AuthStore.user.messages.filter(e => e.id !== res.messageId);
+            toggleOpen()
             toast.success(res.responseMessage)
         } catch (error) {
             console.log(error);
