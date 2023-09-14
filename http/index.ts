@@ -10,7 +10,13 @@ export const API_URL=URL+'/api'
 
 const $api=axios.create({
     withCredentials:true,
-    baseURL:API_URL
+    baseURL:API_URL,
+    headers:{
+        'Access-Control-Allow-Origin':URL,
+        'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+        'Access-Control-Allow-Headers':'Content-Type, Authorization, Content-Length, X-Requested-With, Accept',
+        'Access-Control-Allow-Credentials':true,
+    }
 })
 
 $api.interceptors.request.use((config)=>{
