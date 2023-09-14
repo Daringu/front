@@ -89,7 +89,7 @@ export default class Store{
     async checkAuth(){
         this.setLoading(true)
         try {
-            const response=await axios.get<AuthResponse>(`${API_URL}/refresh`,{withCredentials:true})
+            const response=await axios.post<AuthResponse>(`${API_URL}/refresh`,{withCredentials:true})
             this.setAuth(true);
             this.setUser(response.data.user)
             if (this.hasConnected) {
