@@ -2,8 +2,8 @@ import axios from "axios";
 import { AuthResponse } from "@/models/response/AuthResponse";
 import Cookies from 'js-cookie'
 
-export const URL='https://todosapp-3bnd.onrender.com'
-export const URLWS='https://todosapp-3bnd.onrender.com'
+export const URL='http://todosapp-3bnd.onrender.com'
+export const URLWS='http://todosapp-3bnd.onrender.com'
 
 
 export const API_URL=URL+'/api'
