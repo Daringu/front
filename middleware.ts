@@ -8,7 +8,7 @@ export async function middleware(request: NextRequest) {
         const response=await fetch('https://front-three-azure.vercel.app/api/authorize',{method:'POST',credentials:'include',headers:{"Content-Type": "application/json",'Cookie':request.cookies.toString()}})
         console.log(response.status);
         
-        if (response.status>400) {
+        if (response.status===401||response.status===403) {
             throw new Error('Not authorized')
         }
         
