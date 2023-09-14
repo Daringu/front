@@ -24,7 +24,7 @@ const AddButton: React.FC<AddButtonProps> = ({ onClick }) => {
                 }
                 onClick()
             }}
-            className=" bg-blue-600"
+            className=" bg-blue-600 shrink-0"
             color='info' aria-label="add"
         >
             <AddIcon sx={{ fill: 'black' }} />

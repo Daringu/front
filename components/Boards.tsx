@@ -1,3 +1,4 @@
+'use client'
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { ITodo, statusType } from "@/models/response/TodoResponse";
 import { observer } from "mobx-react-lite";
@@ -5,44 +6,33 @@ import BoardElem from "@/components/Board";
 import { Container, } from '@mui/material';
 import TodoStore from '@/stores/TodoStore';
 import BoardStore from '@/stores/BoardStore';
-import { io } from 'socket.io-client';
-import { URL } from '@/http';
+import { ioServer } from '@/ioServer';
 import { AuthStoreContext } from '@/context/AuthStoreContext';
-import { toast } from 'react-toastify';
 
 interface BoardsProps {
     types: statusType[];
-    id: string;
-    isSingle: boolean;
+    mode: 'single' | 'team';
+    teamId?: string;
+    todoStore: TodoStore;
 }
 
-const Boards: React.FC<BoardsProps> = ({ types, id, isSingle }) => {
-    const [todoStore, setTodoStore] = useState<TodoStore>(() => { return new TodoStore(isSingle) })
-    const [boardStore, setBoardStore] = useState<BoardStore>(() => { return new BoardStore() })
-    const [fetch, setFetch] = useState(false)
+const Boards: React.FC<BoardsProps> = ({ types, mode, teamId, todoStore }) => {
     const { AuthStore } = useContext(AuthStoreContext)
+    const [boardStore, setBoardStore] = useState<BoardStore>(() => { return new BoardStore() })
+
     useEffect(() => {
-        const socket = io(URL, { transports: ['websocket'] });
-        socket.on('connect', () => {
-            console.log('connected')
-        })
-        socket.on('disconnect', () => {
-            console.log('disconnected')
-        })
-        socket.on('message', (msg) => {
-            toast(msg)
-        })
-        setTimeout(() => {
-            socket.emit('message', `ti loh from ${AuthStore.user.username}`)
-        }, 10000)
         return () => {
-            socket.disconnect()
+            if (teamId) {
+                ioServer.emit('leave-team', teamId)
+            }
         }
-    }, [])
+    }, [teamId])
+
+
     const dragEndHandler = useCallback(async (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault()
         if (boardStore.currentBoard !== boardStore.initBoard) {
-            await todoStore.updateTodo({ ...boardStore.currentItem, status: boardStore.currentBoard })
+            await todoStore.updateTodo({ ...boardStore.currentItem, status: boardStore.currentBoard, takenBy: boardStore.currentBoard === 'active' ? 'none' : AuthStore.user.username })
         }
         boardStore.setIsDraggable(true)
         boardStore.discard()
@@ -62,7 +52,9 @@ const Boards: React.FC<BoardsProps> = ({ types, id, isSingle }) => {
     const dragLeaveHandler = (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault()
     }
-
+    useEffect(() => {
+        todoStore.getTodos()
+    }, [])
     return (
         <Container className='flex flex-wrap gap-4 items-start justify-between '>
             {types.map(e => {

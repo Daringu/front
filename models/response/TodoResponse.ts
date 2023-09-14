@@ -7,6 +7,10 @@ export interface ITodo{
     text:string;
     userId?:string;
     id?:string;
+    createdBy?:string;
+    takenBy?:string;
+    createdAt?:string;
+    updatedAt?:string;
 }
 
 export interface ITodoResponse{

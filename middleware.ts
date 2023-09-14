@@ -13,7 +13,6 @@ export async function middleware(request: NextRequest) {
         
     } catch (error) {
         console.log(error);
-        
         return NextResponse.redirect(new URL('/auth', request.url))
     }
 }

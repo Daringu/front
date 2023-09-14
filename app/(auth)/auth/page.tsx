@@ -1,5 +1,5 @@
 'use client'
-import { useState, useContext, useEffect, useCallback } from 'react'
+import { useState, useContext, useCallback } from 'react'
 import { Variant, inputEvent } from "../../../types";
 import Image from "next/image";
 import Logo from '@/public/logo.png'
@@ -60,7 +60,9 @@ const Auth = () => {
         e.preventDefault()
         try {
             if (variant === 'LOGIN') {
-                await AuthStore.login(value.nickname.value, value.password.value);
+                const response = await AuthStore.login(value.nickname.value, value.password.value);
+                console.log(response);
+
                 toast.success(`Successfully logged in`)
                 router.replace('/')
             } else {

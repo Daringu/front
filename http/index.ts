@@ -1,7 +1,10 @@
-import axios, { AxiosError, AxiosRequestConfig } from "axios";
+import axios from "axios";
 import { AuthResponse } from "@/models/response/AuthResponse";
 import Cookies from 'js-cookie'
+
 export const URL='http://localhost:5000'
+export const URLWS='wss://localhost:5000'
+
 
 export const API_URL=URL+'/api'
 

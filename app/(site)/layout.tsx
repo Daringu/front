@@ -5,6 +5,9 @@ import NavDrawer from "@/components/NavDrawer";
 import { observer } from "mobx-react-lite";
 import { AuthStoreContext } from '@/context/AuthStoreContext';
 import Cookies from 'js-cookie';
+import CreateTeamModal from '@/components/CreateTeamModal';
+import TeamsModal from '@/components/TeamsModal';
+import ModalMail from '@/components/ModalMail';
 
 
 const Layout = ({ children }: { children: ReactNode }) => {
@@ -13,7 +16,6 @@ const Layout = ({ children }: { children: ReactNode }) => {
     const handleBurgerClick = () => {
         setOpen((prevState) => !prevState)
     }
-
     useEffect(() => {
         if (Cookies.get('token')) {
             AuthStore.checkAuth();
@@ -28,6 +30,9 @@ const Layout = ({ children }: { children: ReactNode }) => {
                 <h1>Hello world</h1>
             </NavDrawer>
             {children}
+            <CreateTeamModal />
+            <TeamsModal />
+            <ModalMail items={AuthStore.user.messages} />
         </div>
     );
 };

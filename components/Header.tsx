@@ -4,11 +4,15 @@ import { useNavLinks } from "@/hooks/navLinks";
 import CheckIcon from '@mui/icons-material/Check';
 import { observer } from "mobx-react-lite";
 import { Container } from "@mui/material";
+import { AuthStoreContext } from "@/context/AuthStoreContext";
+import { useContext } from "react";
+
 
 interface HeaderProps {
     onClick: () => void;
 }
 const Header: React.FC<HeaderProps> = ({ onClick }) => {
+    const { AuthStore } = useContext(AuthStoreContext);
     const links = useNavLinks();
     return (
         <AppBar position={'static'}>
@@ -18,12 +22,13 @@ const Header: React.FC<HeaderProps> = ({ onClick }) => {
                         TODO
                         <CheckIcon sx={{ scale: '1.5' }} />
                     </IconButton>
-                    <Box className="largeMax:hidden flex">
+                    <Box className="largeMax:hidden gap-1 flex">
                         {links.map(e => {
                             return (
-                                <IconButton color={'inherit'} sx={{ borderRadius: '0', display: `${e.visible ? 'flex' : 'none'}` }} key={e.id} onClick={e.onClick}>
+                                <IconButton className="border-solid  border-2 rounded-sm border-sky-600" color={'inherit'} sx={{ borderRadius: '0', display: `${e.visible ? 'flex' : 'none'}` }} key={e.id} onClick={e.onClick}>
                                     <e.Icon />
                                     {e.text && <Typography variant={"h5"}>{e.text}</Typography>}
+                                    {e.id === 'mail' && <Typography className=" text-red-700">{(e.quantity!) > 0 && e.quantity}</Typography>}
                                 </IconButton>
                             )
                         })}

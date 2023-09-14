@@ -1,3 +1,4 @@
+import { IUser } from "@/models/response/IUser";
 import {ITodo, statusType} from "@/models/response/TodoResponse";
 import BoardStore from "@/stores/BoardStore";
 import TodoStore from "@/stores/TodoStore";
@@ -38,4 +39,26 @@ export interface IBoardItem{
     dragStartHandler:(e:React.DragEvent<HTMLDivElement>,todo:ITodo,type: statusType)=>void;
     dragEndHandler : (e: React.DragEvent<HTMLDivElement>) =>void;
     draggable:boolean;
+}
+
+export interface Message{
+    id:string;
+    text:string;
+    messageType:'invitation'|'text';
+    messageAttachment?:string;
+    seen:boolean;
+}
+
+type mode='single'|'team';
+
+export interface ITeam{
+    id:string;
+    teamTodos:ITodo[];
+    createdBy:string;
+    teamName:string;
+    users:IUser[];
+}
+export interface TeamCreateResponse{
+    teamName:string;
+    teamId:string;
 }

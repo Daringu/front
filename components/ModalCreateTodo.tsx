@@ -7,6 +7,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { toast } from "react-toastify";
 import TodoStore from "@/stores/TodoStore";
+import { AuthStoreContext } from "@/context/AuthStoreContext";
 
 interface ModalCreateTodoProps {
     status: statusType;
@@ -17,12 +18,12 @@ interface ModalCreateTodoProps {
 
 const ModalCreateTodo: React.FC<ModalCreateTodoProps> = ({ status, isOpen, onClose, todoStore }) => {
     const [text, setText] = useState<string>('');
-
+    const { AuthStore } = useContext(AuthStoreContext)
     const handleCreate = () => {
         if (text.length < 1) {
             return toast.error('text is too short')
         }
-        todoStore.addTodo({ text, status })
+        todoStore.addTodo({ text, status, createdBy: AuthStore.user.username, takenBy: status === 'active' ? 'none' : AuthStore.user.username })
     }
 
     return (
@@ -34,7 +35,7 @@ const ModalCreateTodo: React.FC<ModalCreateTodoProps> = ({ status, isOpen, onClo
         >
             <Box className='flex flex-col rounded-lg max-w-xs gap-3 bg-blue-200' sx={{ p: '5rem' }}>
                 <TextField onChange={(e) => setText(e.target.value)} value={text} placeholder="todo text"></TextField>
-                <Button onClick={handleCreate} className="shrink-0 grow-1 p-3" variant='outlined'>Create todo</Button>
+                <Button onClick={handleCreate} className="shrink-0 grow-1 p-3 text-lg" variant='outlined'>Create todo</Button>
             </Box>
         </Modal>
     );

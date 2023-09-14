@@ -4,6 +4,7 @@ import { ReactNode } from "react";
 
 import { observer } from "mobx-react-lite";
 import { useNavLinks } from "@/hooks/navLinks";
+
 interface DrawerProps {
     handleBurgerClick: () => void;
     isDrawerOpen: boolean;
@@ -20,6 +21,8 @@ const NavDrawer: React.FC<DrawerProps> = ({ handleBurgerClick, isDrawerOpen, chi
                         <IconButton sx={{ borderRadius: '0', display: `${e.visible ? 'flex' : 'none'}` }} key={e.id} onClick={e.onClick}>
                             <e.Icon />
                             {e.text && <Typography variant={"h5"}>{e.text}</Typography>}
+
+                            {e.id === 'mail' && <Typography className=" text-red-700">{(e.quantity!) > 0 && e.quantity}</Typography>}
                         </IconButton>
                     )
                 })}

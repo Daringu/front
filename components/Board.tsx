@@ -1,3 +1,4 @@
+'use client'
 import React, { ReactNode, useMemo, useState } from 'react';
 import { Board } from "@/interfaces";
 import { Box, Typography } from "@mui/material";
@@ -30,11 +31,12 @@ const backDrop = {
     'cancelled': 'bg-red-400'
 }
 
-const BoardElem: React.FC<Board> = ({ boardStore, items, type, dragLeaveHandler, dragOverHandler, dragStartHandler, dragEndHandler, isDraggable, currentBoard, todoStore }) => {
+const BoardElem: React.FC<Board> = ({ items, boardStore, type, dragLeaveHandler, dragOverHandler, dragStartHandler, dragEndHandler, isDraggable, currentBoard, todoStore }) => {
     const [createTodoOpen, setOpen] = useState(false)
 
     const itemsToRender: ReactNode[] | ReactNode = useMemo(() => {
         const filtered: ITodo[] = items.filter(e => e.status === type)
+
         return filtered.map(e => {
             return (
                 <TodoCard todoStore={todoStore} dragEndHandler={dragEndHandler} key={e.id}
@@ -43,7 +45,7 @@ const BoardElem: React.FC<Board> = ({ boardStore, items, type, dragLeaveHandler,
             )
 
         })
-    }, [items, type, todoStore.isLoading, isDraggable, dragEndHandler, dragStartHandler])
+    }, [type, todoStore.isLoading, isDraggable, dragEndHandler, dragStartHandler, items])
 
     const handleClose = () => {
         setOpen(false)
@@ -55,8 +57,8 @@ const BoardElem: React.FC<Board> = ({ boardStore, items, type, dragLeaveHandler,
 
     return (
         <Box onDragLeave={(e) => { dragLeaveHandler(e) }} onDragEnter={(e) => { dragOverHandler(e, type) }}
-            sx={{ width: '48%' }}
-            className={` smallMax:w-full ${currentBoard === type && boardHoverStyles[type]} relative transition-all duration-500 flex shrink-0 grow-1 gap-1 dragDrop flex-col ${cardStyles[type]} p-4 items-center border-4 rounded-md shadow-md shadow-black`}>
+            sx={{ width: '48%', maxHeight: '300px', '&::-webkit-scrollbar': { display: 'none' } }}
+            className={` smallMax:w-full overflow-y-auto ${currentBoard === type && boardHoverStyles[type]} relative transition-all duration-500 flex shrink-0 grow-1 gap-1 dragDrop flex-col ${cardStyles[type]} p-4 items-center border-4 rounded-md shadow-md shadow-black`}>
             <Typography className='select-none uppercase text-gray-700' variant='h4'>
                 {type}
             </Typography>

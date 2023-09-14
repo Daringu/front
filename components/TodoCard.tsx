@@ -1,7 +1,7 @@
 'use client'
 import { ITodo, statusType, availableStatuses } from "@/models/response/TodoResponse";
 import { Box, TextField, Typography } from "@mui/material";
-import { useContext, useState } from "react";
+import { useState, useContext } from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton, Select, MenuItem } from "@mui/material";
@@ -11,6 +11,9 @@ import { IBoardItem } from "@/interfaces";
 import CloseIcon from '@mui/icons-material/Close';
 import { toast } from "react-toastify";
 import TodoStore from "@/stores/TodoStore";
+import { AuthStoreContext } from "@/context/AuthStoreContext";
+import { observer } from "mobx-react-lite";
+import PopOver from "./PopOver";
 
 interface IValues {
     text: string;
@@ -30,6 +33,7 @@ const cardStyles = {
 
 const TodoCard: React.FC<TodoCardProps> = ({ item, draggable, dragStartHandler, dragEndHandler, todoStore }) => {
     const [isEdit, setIsEdit] = useState(false);
+    const { AuthStore } = useContext(AuthStoreContext)
     const [values, setValues] = useState<IValues>({
         status: item.status,
         text: item.text
@@ -64,15 +68,23 @@ const TodoCard: React.FC<TodoCardProps> = ({ item, draggable, dragStartHandler, 
             ...item,
             status: values.status,
             text: values.text,
+            takenBy: values.status === 'active' ? 'none' : AuthStore.user.username
         })
         setIsEdit(false)
     }
 
     return (
         <div
-            draggable={(draggable && !isEdit)}
+            draggable={(draggable && !isEdit && todoStore.mode !== 'team' || todoStore.mode === 'team' && item.status === 'active' || todoStore.mode === 'team' && item.takenBy === AuthStore.user.username)}
             onClick={(e) => {
                 e.stopPropagation()
+                if (todoStore.mode === 'team' && item.status !== 'active') {
+                    if (item.takenBy !== AuthStore.user.username) {
+                        return;
+                    }
+                }
+
+
                 if (e.detail === 2) {
                     setIsEdit(!isEdit);
                 }
@@ -83,10 +95,10 @@ const TodoCard: React.FC<TodoCardProps> = ({ item, draggable, dragStartHandler, 
         >
             <Box
                 sx={{ cursor: `${isEdit ? 'standard' : 'grab'}` }}
-                className={`flex items-center border-2  gap-1 shrink rounded-md p-2 aFull flex-wrap ${cardStyles[item.status]}`}
+                className={`flex items-center border-2  gap-1 max-h-28 rounded-md p-2 w-full flex-wrap ${cardStyles[item.status]}`}
             >
                 <Box className=' flex grow justify-between items-start gap-2'>
-                    {isEdit ? <TextField onInput={onInputChange} variant="outlined" placeholder={item.text}></TextField> :
+                    {isEdit ? <TextField onInput={onInputChange} variant="outlined" placeholder={item.text} /> :
                         <Typography className={`${item.status === 'cancelled' && 'line-through'}  px-2 py-1 break-all overflow-y-auto`}>
                             {item.text}
                         </Typography>}
@@ -96,7 +108,7 @@ const TodoCard: React.FC<TodoCardProps> = ({ item, draggable, dragStartHandler, 
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         value={values.status}
-                        label="Age"
+                        label="Status"
                         onChange={onSelectChange}
                     >
                         {availableStatuses.map(e => {
@@ -105,24 +117,49 @@ const TodoCard: React.FC<TodoCardProps> = ({ item, draggable, dragStartHandler, 
                     </Select>
                     }
                 </Box>
-
-                <Box className={`flex grow ${isEdit ? 'justify-around items-center' : 'justify-end'} `}>
-                    {isEdit ? <IconButton onClick={onConfirm}>
-                        <CheckIcon />
-                    </IconButton> : <IconButton className='self-end justify-self-end' onClick={() => {
-                        setIsEdit(true)
-                    }}><EditIcon /></IconButton>}
-
-
-                    {isEdit && <IconButton onClick={onDeleteClick}>
-                        <DeleteIcon />
-                    </IconButton>}
+                {(todoStore.mode === 'single' || todoStore.mode === 'team' && item.status === 'active' || item.takenBy === AuthStore.user.username) &&
+                    <Box className={`flex grow ${isEdit ? 'justify-around items-center' : 'justify-end'} `}>
+                        {isEdit ? <IconButton onClick={onConfirm}>
+                            <CheckIcon />
+                        </IconButton> :
+                            <IconButton className='self-end justify-self-end' onClick={() => {
+                                setIsEdit(true)
+                            }}>
+                                <EditIcon />
+                            </IconButton>}
 
 
-                    {isEdit && <IconButton onClick={() => setIsEdit(false)}>
-                        <CloseIcon />
-                    </IconButton>}
-                </Box>
+                        {isEdit &&
+                            <IconButton onClick={onDeleteClick}>
+                                <DeleteIcon />
+                            </IconButton>}
+
+
+                        {isEdit &&
+                            <IconButton onClick={() => setIsEdit(false)}>
+                                <CloseIcon />
+                            </IconButton>}
+                    </Box>
+                }
+                {
+                    todoStore.mode === 'team' && <>
+                        <PopOver classes="py-3 px-4" id="info" text="info">
+                            <Typography>
+                                Created by:
+                                {item.createdBy}
+                            </Typography>
+                            <Typography>
+                                Taken by:
+                                {item.takenBy}
+                            </Typography>
+                            <Typography>
+                                updated at:{item.updatedAt}
+                            </Typography>
+                        </PopOver>
+
+                    </>
+
+                }
 
             </Box>
         </div>
@@ -130,4 +167,4 @@ const TodoCard: React.FC<TodoCardProps> = ({ item, draggable, dragStartHandler, 
     )
 }
 
-export default TodoCard;
+export default observer(TodoCard);
