@@ -17,7 +17,12 @@ const TeamsModal = () => {
                 {AuthStore.user.teams?.length > 0 ?
                     AuthStore.user.teams.map((team) => {
                         return (
-                            <Box onClick={() => router.push(`/todos/${team.teamId}`)} key={team.teamId} className=" flex transition-all duration-150 hover:bg-sky-400 cursor-pointer px-5 py-3 border-solid border-2 border-sky-500" >
+                            <Box onClick={
+                                () => {
+                                    router.push(`/todos/${team.teamId}`)
+                                    toggleOpen()
+                                }
+                            } key={team.teamId} className=" flex transition-all duration-150 hover:bg-sky-400 cursor-pointer px-5 py-3 border-solid border-2 border-sky-500" >
                                 <Typography className=" text-lg">
                                     {team?.teamName}
                                 </Typography>
