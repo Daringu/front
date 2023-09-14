@@ -31,7 +31,6 @@ export default class TodoService {
 
 export class TeamTodoService{
     static async getTeam(teamId:string):Promise<ITeam>{
-        console.log(teamId);
         
         const response=await $api.get(`/team/${teamId}`)
         return response.data
