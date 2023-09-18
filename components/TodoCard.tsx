@@ -104,7 +104,7 @@ const TodoCard: React.FC<TodoCardProps> = ({ item, draggable, dragStartHandler, 
                             placeholder={item.text}
                         />
                     ) : (
-                        <Typography className={`${item.status === 'cancelled' && 'line-through'}  px-2 py-1 break-all overflow-y-auto`}>
+                        <Typography draggable={false} className={`${item.status === 'cancelled' && 'line-through'}  px-2 py-1 break-all overflow-y-auto`}>
                             {item.text}
                         </Typography>
                     )}
