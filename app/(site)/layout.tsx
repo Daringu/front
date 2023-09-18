@@ -4,7 +4,6 @@ import Header from "@/components/Header";
 import NavDrawer from "@/components/NavDrawer";
 import { observer } from "mobx-react-lite";
 import { AuthStoreContext } from '@/context/AuthStoreContext';
-import Cookies from 'js-cookie';
 import CreateTeamModal from '@/components/CreateTeamModal';
 import TeamsModal from '@/components/TeamsModal';
 import ModalMail from '@/components/ModalMail';
