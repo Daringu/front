@@ -55,7 +55,8 @@ const TodoCard: React.FC<TodoCardProps> = ({ item, draggable, dragStartHandler, 
         todoStore.deleteTodo(item);
     };
 
-    const onConfirm = () => {
+    const onConfirm = (e: any) => {
+        e.stopPropagation();
         if (values.text === item.text && values.status === item.status) {
             return toast.error('You didn\'t change anything');
         }
