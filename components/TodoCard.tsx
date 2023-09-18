@@ -56,7 +56,6 @@ const TodoCard: React.FC<TodoCardProps> = ({ item, draggable, dragStartHandler, 
     };
 
     const onConfirm = (e: any) => {
-        e.stopPropagation();
         if (values.text === item.text && values.status === item.status) {
             return toast.error('You didn\'t change anything');
         }
@@ -71,20 +70,24 @@ const TodoCard: React.FC<TodoCardProps> = ({ item, draggable, dragStartHandler, 
         setIsEdit(false);
     };
 
-    const handleDoubleClick = () => {
-        if (todoStore.mode === 'team' && item.status !== 'active' && item.takenBy !== AuthStore.user.username) {
-            return;
+    const handleDoubleClick = (e: any) => {
+        e.stopPropagation();
+        if (todoStore.mode === 'team' && item.status !== 'active') {
+            if (item.takenBy !== AuthStore.user.username) {
+                return;
+            }
         }
-        setIsEdit(!isEdit);
+
+
+        if (e.detail === 2) {
+            setIsEdit(!isEdit);
+        }
     };
 
     return (
         <div
             draggable={(draggable && !isEdit && todoStore.mode !== 'team') || (todoStore.mode === 'team' && item.status === 'active') || (todoStore.mode === 'team' && item.takenBy === AuthStore.user.username)}
-            onClick={(e) => {
-                e.stopPropagation();
-                handleDoubleClick();
-            }}
+            onClick={handleDoubleClick}
             onDragStart={(e) => dragStartHandler(e, item, item.status)}
             onDragEnd={dragEndHandler}
             className="flex"
